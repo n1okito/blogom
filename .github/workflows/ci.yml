@@ -2,30 +2,32 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master ]       # <-- main helyett master
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-      - name: Kód letöltése
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Java beállítása
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Maven build + teszt + Jacoco coverage
-        run: mvn clean verify
+      - name: Build with Maven
+        run: mvn clean install
 
-      - name: Artifact feltöltése
-        uses: actions/upload-artifact@v3
+      - name: Run tests
+        run: mvn test
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: blogom-artifact
-          path: target/blogom-*.jar
+          name: blogom-jar
+          path: target/*.jar
