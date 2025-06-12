@@ -1,9 +1,11 @@
 package com.example.blogom.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "app_user")
 public class User {
 
     @Id
@@ -12,8 +14,8 @@ public class User {
 
     private String username;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Post> posts;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     // Alapértelmezett konstruktor
     public User() {}
@@ -49,5 +51,17 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    // ➕ Kiegészítés: Post hozzáadása
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setAuthor(this);
+    }
+
+    // ➖ Kiegészítés: Post eltávolítása
+    public void removePost(Post post) {
+        posts.remove(post);
+        post.setAuthor(null);
     }
 }

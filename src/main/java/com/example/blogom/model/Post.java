@@ -20,6 +20,9 @@ public class Post {
     @ManyToOne
     private User author;
 
+    @Transient
+    private String authorName;
+
     // Alapértelmezett konstruktor
     public Post() {}
 
@@ -53,6 +56,10 @@ public class Post {
         return author;
     }
 
+    public String getAuthorName() {
+        return authorName;
+    }
+
     // SETTEREK
 
     public void setId(Long id) {
@@ -73,5 +80,9 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 }
