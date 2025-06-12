@@ -6,4 +6,9 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTitleContainingIgnoreCase(String keyword);
+    List<Post> findAllByOrderByCreatedAtDesc();
+    List<Post> findAllByOrderByCreatedAtAsc();
+    List<Post> findAllByOrderByTitleAsc();
+    List<Post> findAllByOrderByTitleDesc();
+
 }

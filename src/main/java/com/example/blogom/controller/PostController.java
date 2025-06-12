@@ -23,10 +23,14 @@ public class PostController {
         this.userRepository = userRepository;
     }
 
-    // 📄 Összes bejegyzés megjelenítése
+    // 📄 Összes bejegyzés megjelenítése + rendezés
     @GetMapping
-    public String listPosts(Model model) {
-        model.addAttribute("posts", postService.findAll());
+    public String listPosts(
+            @RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+            Model model
+    ) {
+        model.addAttribute("posts", postService.findAllSorted(sort));
+        model.addAttribute("selectedSort", sort);
         return "posts";
     }
 
