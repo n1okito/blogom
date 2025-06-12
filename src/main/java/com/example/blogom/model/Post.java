@@ -57,6 +57,11 @@ public class Post {
     }
 
     public String getAuthorName() {
+        // Ha van szerző, onnan vesszük
+        if (author != null) {
+            return author.getUsername();
+        }
+        // Egyébként a beállított mezőből
         return authorName;
     }
 

@@ -1,24 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Bejegyzés</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/kepek/hatterkep.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            max-width: 700px;
+            margin: auto;
+            margin-top: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        label {
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            background-color: #6c5ce7;
+            border-color: #6c5ce7;
+            font-size: 1.1rem;
+            padding: 10px 25px;
+            margin-top: 25px;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a4cd7;
+            border-color: #5a4cd7;
+        }
+
+        .btn-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1 th:text="${post.id == null} ? 'Új bejegyzés' : 'Bejegyzés szerkesztése'"></h1>
-    <form th:action="@{/posts}" th:object="${post}" method="post">
-        <input type="hidden" th:field="*{id}" />
+    <div class="form-container">
+        <h1 th:text="${post.id == null} ? '🆕 Új bejegyzés' : '✏️ Bejegyzés szerkesztése'"></h1>
+        <form th:action="@{/posts}" th:object="${post}" method="post">
+            <input type="hidden" th:field="*{id}" />
 
-        <label>Cím:</label>
-        <input type="text" th:field="*{title}" required/><br>
+            <div class="mb-3">
+                <label for="title">Cím:</label>
+                <input type="text" th:field="*{title}" class="form-control" required/>
+            </div>
 
-        <label>Tartalom:</label>
-        <textarea th:field="*{content}" rows="5" cols="30" required></textarea><br>
+            <div class="mb-3">
+                <label for="content">Tartalom:</label>
+                <textarea th:field="*{content}" class="form-control" rows="6" required></textarea>
+            </div>
 
-        <label>Szerző neve:</label>
-        <input type="text" th:field="*{authorName}" required/><br>
+            <div class="mb-3">
+                <label for="authorName">Szerző neve:</label>
+                <input type="text" th:field="*{authorName}" class="form-control" required/>
+            </div>
 
-        <button type="submit">Mentés</button>
-    </form>
-    <a th:href="@{/posts}">Vissza</a>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">💾 Mentés</button>
+            </div>
+        </form>
+        <div class="btn-back">
+            <a th:href="@{/posts}" class="btn btn-link">← Vissza a főoldalra</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,19 +1,108 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Blog - Bejegyzések</title>
+    <meta charset="UTF-8">
+    <title>Blogom</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('/kepek/hatterkep.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+        }
+
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        h1.display-3 {
+            font-weight: 800;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #6c5ce7;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #5941d9;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .small {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .action-buttons a {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bejegyzések</h1>
-    <a th:href="@{/posts/new}">Új bejegyzés</a>
-    <ul>
-        <li th:each="post : ${posts}">
-            <h3 th:text="${post.title}">Cím</h3>
-            <p th:text="${post.content}">Tartalom</p>
-            <small th:text="${post.createdAt}">Dátum</small><br>
-            <a th:href="@{'/posts/edit/' + ${post.id}}">Szerkesztés</a>
-            <a th:href="@{'/posts/delete/' + ${post.id}}">Törlés</a>
-        </li>
-    </ul>
+    <div class="container my-5 overlay">
+        <div class="text-center">
+            <h1 class="display-3">📝 Blogom</h1>
+        </div>
+
+        <div class="d-flex justify-content-center mb-5">
+            <a class="btn btn-primary px-4 py-2 fs-5" th:href="@{/posts/new}">+ Új bejegyzés</a>
+        </div>
+
+
+
+        <div th:if="${posts.empty}">
+            <p class="text-muted text-center">Nincs még bejegyzés.</p>
+        </div>
+
+        <div class="row row-cols-1 g-5" th:each="post : ${posts}">
+            <div class="col">
+                <div class="card">
+                    <h4 class="card-title" th:text="${post.title}">Cím</h4>
+                    <p class="card-text" th:text="${post.content}">Tartalom</p>
+                    <div class="small">
+                        <span th:text="'👤 Szerző: ' + ${post.authorName}">Szerző</span><br>
+                        <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">Dátum</span>
+                    </div>
+                    <div class="mt-3 action-buttons">
+                        <a class="btn btn-outline-secondary" th:href="@{'/posts/edit/' + ${post.id}}">✏️ Szerkesztés</a>
+                        <a class="btn btn-outline-danger" th:href="@{'/posts/delete/' + ${post.id}}">🗑️ Törlés</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
