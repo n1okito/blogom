@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blog - Bejegyzések</title>
+</head>
+<body>
+    <h1>Bejegyzések</h1>
+    <a th:href="@{/posts/new}">Új bejegyzés</a>
+    <ul>
+        <li th:each="post : ${posts}">
+            <h3 th:text="${post.title}">Cím</h3>
+            <p th:text="${post.content}">Tartalom</p>
+            <small th:text="${post.createdAt}">Dátum</small><br>
+            <a th:href="@{'/posts/edit/' + ${post.id}}">Szerkesztés</a>
+            <a th:href="@{'/posts/delete/' + ${post.id}}">Törlés</a>
+        </li>
+    </ul>
+</body>
+</html>
