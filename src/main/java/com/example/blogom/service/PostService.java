@@ -33,4 +33,7 @@ public class PostService {
     public void deleteById(Long id) {
         postRepository.deleteById(id);
     }
+     public List<Post> searchPosts(String keyword) {
+        return postRepository.findByTitleContainingIgnoreCase(keyword);
+    }
 }

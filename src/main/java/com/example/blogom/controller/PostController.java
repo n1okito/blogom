@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,51 +23,63 @@ public class PostController {
         this.userRepository = userRepository;
     }
 
-    // ✅ Listaoldal: GET /posts
+    // 📄 Összes bejegyzés megjelenítése
     @GetMapping
     public String listPosts(Model model) {
         model.addAttribute("posts", postService.findAll());
         return "posts";
     }
 
-    // ✅ Új post űrlap: GET /posts/new
+    // 🔍 Keresés címre vagy tartalomra
+    @GetMapping("/search")
+    public String searchPosts(@RequestParam("keyword") String keyword, Model model) {
+        List<Post> foundPosts = postService.searchPosts(keyword);
+        model.addAttribute("posts", foundPosts);
+
+        if (foundPosts.isEmpty()) {
+            model.addAttribute("message", "❗ Ilyen bejegyzés nem található.");
+        }
+
+        return "posts";
+    }
+
+    // 📝 Új bejegyzés űrlap
     @GetMapping("/new")
     public String newPostForm(Model model) {
         model.addAttribute("post", new Post());
         return "post_form";
     }
 
-    // ✅ Mentés: POST /posts
+    // 💾 Bejegyzés mentése
     @PostMapping
     public String savePost(@ModelAttribute Post post) {
-        String inputName = post.getAuthorName();
-        String name = (inputName == null || inputName.trim().isEmpty()) ? "Ismeretlen" : inputName.trim();
+        String rawName = post.getAuthorName();
+        String name = (rawName == null || rawName.trim().isEmpty()) ? "Ismeretlen" : rawName.trim();
 
-        Optional<User> existingUser = userRepository.findByUsername(name);
-        User author = existingUser.orElseGet(() -> userRepository.save(new User(name)));
+        User author = userRepository.findByUsername(name)
+                .orElseGet(() -> userRepository.save(new User(name)));
 
         post.setAuthor(author);
         postService.save(post);
-
         return "redirect:/posts";
     }
 
-    // ✅ Szerkesztés: GET /posts/edit/{id}
+    // ✏️ Szerkesztés űrlap
     @GetMapping("/edit/{id}")
     public String editPostForm(@PathVariable Long id, Model model) {
-        Optional<Post> post = postService.findById(id);
-        if (post.isPresent()) {
-            Post p = post.get();
-            if (p.getAuthor() != null) {
-                p.setAuthorName(p.getAuthor().getUsername());
+        Optional<Post> optionalPost = postService.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            if (post.getAuthor() != null) {
+                post.setAuthorName(post.getAuthor().getUsername());
             }
-            model.addAttribute("post", p);
+            model.addAttribute("post", post);
             return "post_form";
         }
         return "redirect:/posts";
     }
 
-    // ✅ Törlés: GET /posts/delete/{id}
+    // ❌ Törlés
     @GetMapping("/delete/{id}")
     public String deletePost(@PathVariable Long id) {
         postService.deleteById(id);
